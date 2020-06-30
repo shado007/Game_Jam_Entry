@@ -5,22 +5,26 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    [Header("Physics")]
     public Rigidbody2D rb;
     public Animator anim;
 
     public float speed;
     private float movement;
 
+    private bool movementModified;
+
+    [Header("Materials")]
     public float wood;
     public Text woodNum;
 
     public float rock;
     public Text rockNum;
 
-    private bool movementModified;
+    public float stick;
+    public Text stickNum;
 
-
-
+    [Header("Insanity")]
     public float maxInsanity;
     public float currentInsanity = 0f;
 
@@ -29,8 +33,13 @@ public class Player : MonoBehaviour
     public bool inLight;
 
 
-
     public Light light;
+
+    [Header("Hunger")]
+    public float maxHunger;
+    public float currentHunger = 0f;
+
+    public Bar hungerBar;
 
     void Start()
     {
@@ -71,14 +80,20 @@ public class Player : MonoBehaviour
 
         if (!inLight)
         {
-            IncreaseInsanity(0.02f);
+            IncreaseInsanity(0.003f);
         }
         else
         {
             IncreaseInsanity(-0.004f);
         }
 
-        if(currentInsanity >= maxInsanity)
+        IncreaseHunger(0.001f);
+
+        if (currentInsanity >= maxInsanity)
+        {
+            Destroy(this.gameObject);
+        }
+        if (currentHunger >= maxHunger)
         {
             Destroy(this.gameObject);
         }
@@ -94,10 +109,20 @@ public class Player : MonoBehaviour
         rock++;
         rockNum.text = "" + rock;
     }
+    public void AddStick()
+    {
+        stick++;
+        stickNum.text = "" + stick;
+    }
 
     void IncreaseInsanity(float insanity)
     {
         currentInsanity += insanity;
         insanityBar.SetInsanity(currentInsanity);
+    }
+    void IncreaseHunger(float hunger)
+    {
+        currentHunger += hunger;
+        hungerBar.SetHunger(currentHunger);
     }
 }
